@@ -8,18 +8,22 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
+
 servers:
-- url: /
-  description: Local server
+  - url: /
+    description: Local server
+
 paths:
   /predict:
     post:
       tags:
-      - Predict controller
-      summary: launch the asset energy consumption prediction service
-      description: launch the asset energy consumption prediction service.
+        - Predict controller
+      summary: Launch the asset energy consumption prediction service
+      description: |
+        Launch the asset energy consumption prediction service.
       operationId: predict
       requestBody:
+        required: true
         content:
           multipart/form-data:
             schema:
@@ -27,27 +31,33 @@ paths:
       responses:
         "200":
           description: |
-            Success. The output is in CSV format and presents the consumption estimates for each asset, using the same time intervals as the input file.
+            Success. The output is in CSV format and presents the consumption estimates 
+            for each asset, using the same time intervals as the input file.
           content:
             text/csv:
               schema:
                 type: string
                 x-content-type: text/csv
         "404":
-          description: Prediction model not found.
+          description: |
+            Prediction model not found.
         "500":
-          description: Error occurred when invoking resource.
-      x-openapi-router-controller: src.controllers.predict_controller
+          description: |
+            Error occurred when invoking the resource.
+
 components:
   schemas:
     predict_body:
       required:
-      - data
+        - data
       type: object
       properties:
         data:
           type: string
           description: |
-            This CSV file contains raw data from assets. It must have two columns: first column labeled 'datetime' with dates in the format 'YYYY-MM-DD HH:MM' (e.g., '2023-07-24 23:00:00') and second column labeled 'energy' with numeric value. The two columns are separated by commas.
+            This CSV file contains raw data from assets. It must have two columns:
+            - **First column:** labeled `datetime` with dates in the format `YYYY-MM-DD HH:MM` 
+              (e.g., `2023-07-24 23:00:00`).
+            - **Second column:** labeled `energy` with numeric values. The two columns 
+              are separated by commas.
           format: binary
-
